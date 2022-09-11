@@ -1,7 +1,6 @@
 const input = document.querySelector('.input');
 const button = document.querySelector('.button');
 const items = document.querySelector('.items');
-const closeButton = document.querySelector('.close');
 
 const addCloseButton = (li) => {
   const span = document.createElement('span');
@@ -30,4 +29,13 @@ const createTask = (task) => {
 
 const clearInput = () => {
   input.value = "";
+  input.focus();
 }
+
+document.addEventListener('click', function(event) {
+  const el = event.target;
+  if (el.classList.contains('close')) {
+    el.parentElement.remove();
+  }
+});
+
