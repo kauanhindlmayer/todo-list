@@ -1,6 +1,7 @@
 const input = document.querySelector('.input');
 const button = document.querySelector('.button');
 const items = document.querySelector('.items');
+const tasks = document.getElementsByTagName('li');
 
 const addCloseButton = (li) => {
   const span = document.createElement('span');
@@ -25,6 +26,7 @@ const createTask = (task) => {
   li.innerHTML = task;
   items.appendChild(li);
   addCloseButton(li);
+  saveTask(task);
 }
 
 const clearInput = () => {
@@ -39,3 +41,16 @@ document.addEventListener('click', function(event) {
   }
 });
 
+const saveTask = (task) => {
+  let tasks = new Array();
+  tasks.push(task);
+  localStorage.setItem('tasks', JSON.stringify(tasks));
+}
+
+window.addEventListener('load', () => {
+  if(localStorage.hasOwnProperty('tasks')) {
+    JSON.parse(localStorage.getItem('tasks')).forEach(element => {
+      createTask(element);
+    });
+  }
+})
