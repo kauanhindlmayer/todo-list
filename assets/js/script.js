@@ -11,6 +11,17 @@ const addCloseButton = (li) => {
   li.appendChild(span);
 }
 
+input.addEventListener('keypress', (event) => {
+  if (event.keyCode === 13) {
+    if (!input.value) {
+      alert("You must write something!");
+      return;
+    }  
+    createTask(input.value);
+    clearInput();
+  }
+})
+
 button.addEventListener('click', (event) => {
   if (!input.value) {
     alert("You must write something!");
@@ -26,7 +37,7 @@ const createTask = (task) => {
   li.innerHTML = task;
   items.appendChild(li);
   addCloseButton(li);
-  saveTask(task);
+  saveTask();
 }
 
 const clearInput = () => {
@@ -38,19 +49,31 @@ document.addEventListener('click', function(event) {
   const el = event.target;
   if (el.classList.contains('close')) {
     el.parentElement.remove();
+    saveTask();
   }
 });
 
-const saveTask = (task) => {
-  let tasks = new Array();
-  tasks.push(task);
-  localStorage.setItem('tasks', JSON.stringify(tasks));
+const saveTask = () => {
+  const tasks = document.querySelectorAll('li');
+  const todolist = [];
+  
+  for(let task of tasks) {
+    let textTask = task.innerText;
+    textTask = textTask.replace('\u00D7', '');
+    todolist.push(textTask);
+  }
+
+  localStorage.setItem('todolist', JSON.stringify(todolist));
 }
 
 window.addEventListener('load', () => {
-  if(localStorage.hasOwnProperty('tasks')) {
-    JSON.parse(localStorage.getItem('tasks')).forEach(element => {
-      createTask(element);
-    });
+  if(localStorage.hasOwnProperty('todolist')) {
+    const tasksFromLocalStorage = JSON.parse(localStorage.getItem('todolist'));
+
+    console.log(tasksFromLocalStorage);
+
+    for (let task of tasksFromLocalStorage) {
+      createTask(task);
+    }
   }
 })
